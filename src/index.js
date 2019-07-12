@@ -18,11 +18,14 @@ const hotkey = {
         //Handle One Modifyer + a keypress at a time
         if(this.modifyer !== null && !this.isModifyer(e.key) ){
           this.checkAndRunCommand(this.modifyer + '+' + e.key.toLowerCase() );
-          //Make sure to clear modifyer
-          this.modifyer = null;
+
         //Handle single key press
         } else if( !this.isModifyer(e.key) ) {
           this.checkAndRunCommand(e.key.toLowerCase() );
+
+        //Remove modifyer when mod key is up
+        } else if (this.isModifyer(e.key)){
+          this.modifyer = null;
         }
 
       }
