@@ -1,0 +1,36 @@
+{
+  "name": "hotkey",
+  "version": "0.1.0",
+  "description": "Hotkey event like module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patomation/hotkey.git"
+  },
+  "keywords": [
+    "hotkeys",
+    "control",
+    "command",
+    "shift",
+    "hotkey",
+    "modifiers"
+  ],
+  "author": "Patrick Kelly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patomation/hotkey/issues"
+  },
+  "homepage": "https://github.com/patomation/hotkey#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.5",
+    "istanbul": "^0.4.5",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^6.1.4"
+  }
+}
