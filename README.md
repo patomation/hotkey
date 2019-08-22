@@ -8,22 +8,51 @@ A small module that handles your hotkeys
   `npm install @patomation/hotkey`
 
 ## Usage
+
+Supports using modifier keys in any order:
+`alt+ctrl+shift+p` for example, is the same as `p+control+alt+shift`:
+
 ```javascript
-hotkey.bind('control+z', () => {
+hotkey('control+z', () => {
     //Do some undo action
 });
 ```
 
+Supports alpha numeric characters and more
 ```javascript
-hotkey.bind('enter', () => {
+hotkey('enter', () => {
     //Do something when user hits enter
 });
 ```
 
+Add hotkey functions for arrow keys by using `uparrow`, `downarrow`, `leftarrow` and `rightarrow`
 ```javascript
-hotkey.bind('downarrow', () => {
+hotkey('downarrow', () => {
     //Down arrow function
 });
+```
+
+### new features
+To have events for key up and key down. This is now supported.
+
+```javascript
+hotkey('f')
+.down(() => {
+  //Do something when f key is down
+})
+.up(() => {
+  //Do something when f key is up
+})
+```
+
+Note: Adding up and down methods supports modifiers in hotkey commands.
+Additionally this could be written this way:
+```javascript
+hotkey('shift+f', () => {
+  //Do something when f key is down
+}).up(() => {
+  //Do something when f key is up
+})
 ```
 
 
