@@ -9,6 +9,7 @@ class Hotkey {
     this.shiftKey = false; //Boolean
     this.up = callback || null; //Function
     this.down = null; //Function
+    this.pressed = false; //Boolean - only let us press once
   }
 }
 
@@ -66,10 +67,13 @@ document.onkeydown = (event) => {
       if (
         hotkey.altKey === event.altKey &&
         hotkey.ctrlKey === event.ctrlKey &&
-        hotkey.shiftKey === event.shiftKey
+        hotkey.shiftKey === event.shiftKey &&
+        !hotkey.pressed
       ) {
         //Run command if defined
         if(hotkey.down) hotkey.down()
+        //Prevents retriggering when holding down key(s)
+        hotkey.pressed = true;
       }
   }
 }
@@ -87,6 +91,8 @@ document.onkeyup = (event) => {
       ) {
         //Run command
         if(hotkey.up) hotkey.up()
+        //Prevents retriggering when holding down key(s)
+        hotkey.pressed = false;
       }
   }
 }
