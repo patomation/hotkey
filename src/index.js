@@ -1,10 +1,5 @@
 const storage = {}
 
-const addToStorage = (key, hotkey) => {
-  if(!storage[key]) storage[key] = []
-  storage[key].push( hotkey );
-}
-
 class Hotkey {
   constructor(callback){
     this.up = callback || null; //Function
@@ -59,37 +54,26 @@ const set = (command, callback) => {
   //Create blank new hotkey and use callback if provided here
   if(!storage[lastKey]) storage[lastKey] = new Hotkey(callback)
 
-  //Allow chaining methods
+  //Allow chainging methods
   return { up, down }
 }
 
 //Set callback for down
 const down = (callback) => {
   //Store "down" callback with last command
-  if (callback) {
-    let lastId = storage[lastKey].length-1;
-    storage[lastKey][lastId].down = callback;
-  }
-  //Allow chaining methods
+  if (callback) storage[lastKey].down = callback;
+  //Allow chainging methods
   return { up }
 }
 
 //Set callback for up
 const up = (callback) => {
   //Store "up" callback with last command
-  if (callback) {
-    let lastId = storage[lastKey].length-1;
-    storage[lastKey][lastId].up = callback;
-  }
-  //Allow chaining methods
+  if (callback) storage[lastKey].up = callback;
+  //Allow chainging methods
   return { down }
 }
 
-const format = (key) => {
-  key = key.toLowerCase()
-  if(key === ' ') key = 'space';
-  return key;
-}
 
 //Key down event listener
 document.onkeydown = (event) => {
