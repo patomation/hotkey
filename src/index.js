@@ -2,15 +2,27 @@ const storage = {}
 
 class Hotkey {
   constructor(callback){
-    this.key = null;
-    this.keys = []; //Handle multiple keys?
-    this.altKey = false; //Boolean
-    this.ctrlKey = false; //Boolean
-    this.shiftKey = false; //Boolean
     this.up = callback || null; //Function
     this.down = null; //Function
     this.pressed = false; //Boolean - only let us press once
   }
+}
+
+const getCommandString = ({
+  altKey,
+  ctrlKey,
+  shiftKey,
+  key
+}) => {
+  key = key.toLowerCase(); //Force lowercase
+  let string = '';
+  if(altKey && key !== 'alt') string += 'alt+';
+  if(ctrlKey && key !== 'control') string += 'ctrl+';
+  if(shiftKey && key !== 'shift') string += 'shift+';
+  //Handle space and regular keys
+  if(key) string += key === ' ' ? 'space' : key;
+
+  return string;
 }
 
 //Save last key so we can find it for adding up and down methods
@@ -19,23 +31,28 @@ let lastKey = null;
 //Set one hotkey
 const set = (command, callback) => {
 
+  //Command is combined: ctlr+z
+  if(command.length > 1 && command.includes('+')){
+    //Collect Modifiers
+    let commands = {};
+    command.split('+').forEach( item => {
+      if(item === 'alt') commands.altKey = true;
+      else if(item === 'ctrl') commands.ctrlKey = true;
+      else if(item === 'control') commands.ctrlKey = true;
+      else if(item === 'shift') commands.shiftKey = true;
+      else commands.key = item; // Store regular keys but add something so we know it uses modifyers
+    })
+    //reformat storage name
+    lastKey = getCommandString(commands);
+
+  //Command is single modifier: shift, ctrl, space enter, backspace, ect
+  //Or its a single letter a, b, c, d
+  } else {
+    lastKey = command
+  }
+
   //Create blank new hotkey and use callback if provided here
-  let hotkey = new Hotkey(callback);
-
-  //Collect Modifiers
-  command.split('+').forEach( item => {
-    if(item === 'alt') hotkey.shiftKey = true;
-    else if(item === 'ctrl') hotkey.ctrlKey = true;
-    else if(item === 'control') hotkey.ctrlKey = true;
-    else if(item === 'shift') hotkey.shiftKey = true;
-    else hotkey.keys.push(item); // Store regular keys
-
-  })
-
-  lastKey = hotkey.keys[0];
-
-  //Store hotkey command
-  storage[lastKey] = hotkey;
+  if(!storage[lastKey]) storage[lastKey] = new Hotkey(callback)
 
   //Allow chainging methods
   return { up, down }
@@ -60,40 +77,20 @@ const up = (callback) => {
 
 //Key down event listener
 document.onkeydown = (event) => {
-  // If key stored
-  const hotkey = storage[event.key.toLowerCase()];
-  if (hotkey !== undefined) {
-      // if Modifiers used and match what is defined
-      if (
-        hotkey.altKey === event.altKey &&
-        hotkey.ctrlKey === event.ctrlKey &&
-        hotkey.shiftKey === event.shiftKey &&
-        !hotkey.pressed
-      ) {
-        //Run command if defined
-        if(hotkey.down) hotkey.down()
-        //Prevents retriggering when holding down key(s)
-        hotkey.pressed = true;
-      }
+  const hotkey = storage[getCommandString(event)];
+  if (hotkey !== undefined && !hotkey.pressed) {
+    if (hotkey.down) hotkey.down()
+    hotkey.pressed = true
   }
 }
 
 //Key up event listener
 document.onkeyup = (event) => {
-  // If key stored
-  const hotkey = storage[event.key.toLowerCase()];
+  const hotkey = storage[getCommandString(event)];
+
   if (hotkey !== undefined) {
-      // if Modifiers used and match what is defined
-      if (
-        hotkey.altKey === event.altKey &&
-        hotkey.ctrlKey === event.ctrlKey &&
-        hotkey.shiftKey === event.shiftKey
-      ) {
-        //Run command
-        if(hotkey.up) hotkey.up()
-        //Prevents retriggering when holding down key(s)
-        hotkey.pressed = false;
-      }
+    if (hotkey.up) hotkey.up()
+    hotkey.pressed = false
   }
 }
 
