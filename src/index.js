@@ -29,7 +29,7 @@ const getCommandString = ({
 let lastKey = null;
 
 //Set one hotkey
-const set = (command, callback) => {
+const hotkey = (command, callback) => {
 
   //Command is combined: ctlr+z
   if(command.length > 1 && command.includes('+')){
@@ -74,6 +74,10 @@ const up = (callback) => {
   return { down }
 }
 
+//Expose removal function
+hotkey.remove = (command) => {
+  if(storage[command]) delete storage[command];
+}
 
 //Key down event listener
 document.onkeydown = (event) => {
@@ -96,4 +100,4 @@ document.onkeyup = (event) => {
 
 
 //Expose only set with down and up methods
-module.exports = set;
+module.exports = hotkey;
