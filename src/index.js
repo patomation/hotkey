@@ -25,12 +25,41 @@ const getCommandString = ({
   return string;
 }
 
+//bindEvents
+const bindEvents = () => {
+  //Key down event listener
+  document.onkeydown = (event) => {
+    const hotkey = storage[getCommandString(event)];
+    if (hotkey !== undefined && !hotkey.pressed) {
+      if (hotkey.down) hotkey.down()
+      hotkey.pressed = true
+    }
+  }
+
+  //Key up event listener
+  document.onkeyup = (event) => {
+    const hotkey = storage[getCommandString(event)];
+
+    if (hotkey !== undefined) {
+      if (hotkey.up) hotkey.up()
+      hotkey.pressed = false
+    }
+  }
+}
+
+//Initialization boolean for doing things only once
+let initialized = false;
+
 //Save last key so we can find it for adding up and down methods
 let lastKey = null;
 
 //Set one hotkey
 const hotkey = (command, callback) => {
-
+  //Initialize only once
+  if(!initialized) {
+    bindEvents();
+    initialized = true;
+  }
   //Command is combined: ctlr+z
   if(command.length > 1 && command.includes('+')){
     //Collect Modifiers
@@ -78,26 +107,6 @@ const up = (callback) => {
 hotkey.remove = (command) => {
   if(storage[command]) delete storage[command];
 }
-
-//Key down event listener
-document.onkeydown = (event) => {
-  const hotkey = storage[getCommandString(event)];
-  if (hotkey !== undefined && !hotkey.pressed) {
-    if (hotkey.down) hotkey.down()
-    hotkey.pressed = true
-  }
-}
-
-//Key up event listener
-document.onkeyup = (event) => {
-  const hotkey = storage[getCommandString(event)];
-
-  if (hotkey !== undefined) {
-    if (hotkey.up) hotkey.up()
-    hotkey.pressed = false
-  }
-}
-
 
 //Expose only set with down and up methods
 module.exports = hotkey;
