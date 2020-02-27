@@ -65,6 +65,9 @@ hotkey('shift+f', () => {
   3. build lib folder with rollup with typescript overides
   `npm run prebuild`
 
+## View The files that will be published 
+  `npm pack && tar -xvzf *.tgz && rm -rf package *.tgz`
+
 ## Tests
 
   `npm test`
