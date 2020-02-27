@@ -1,12 +1,12 @@
 interface HotkeyStorage { [key: string]: Hotkey }
 
-const storage: HotkeyStorage = {}
+export const storage: HotkeyStorage = {}
 
 type Callback = () => void
 
-class Hotkey {
-  constructor (callback?: Callback) {
-    this.up = callback !== undefined ? callback : null // Function
+export class Hotkey {
+  constructor (alternateUp?: Callback | null) {
+    this.up = alternateUp !== undefined && alternateUp !== undefined ? alternateUp : null // Function
     this.down = null // Function
     this.pressed = false // Boolean - only let us press once
   }
@@ -20,11 +20,11 @@ type CommandString = string
 
 type LastKey = CommandString | null
 
-type Up = (arg0: Callback) => ({
+type Up = (arg0?: Callback) => ({
   down: Down
 })
 
-type Down = (arg0: Callback) => ({
+type Down = (arg0?: Callback) => ({
   up: Up
 })
 
@@ -42,16 +42,16 @@ export interface HotkeyAsignment {
   remove: Remove
 }
 
-const getCommandString = ({
+export const getCommandString = ({
   altKey,
   ctrlKey,
   shiftKey,
   key
 }: Commands): CommandString => {
   let string = ''
-  if (altKey !== undefined && key !== 'alt') string += 'alt+'
-  if (ctrlKey !== undefined && key !== 'control') string += 'ctrl+'
-  if (shiftKey !== undefined && key !== 'shift') string += 'shift+'
+  if (altKey !== undefined && altKey && key !== 'alt') string += 'alt+'
+  if (ctrlKey !== undefined && ctrlKey && key !== 'control') string += 'ctrl+'
+  if (shiftKey !== undefined && shiftKey && key !== 'shift') string += 'shift+'
   if (key !== undefined) key = key.toLowerCase() // Force lowercase
   // Handle space and regular keys
   if (key !== undefined) string += key === ' ' ? 'space' : key
@@ -59,8 +59,22 @@ const getCommandString = ({
   return string
 }
 
+export const formatCommandString = (command: CommandString): CommandString => {
+  // Collect Modifiers
+  const commands: Commands = {}
+  command.split('+').forEach(item => {
+    if (item === 'alt') commands.altKey = true
+    else if (item === 'ctrl') commands.ctrlKey = true
+    else if (item === 'control') commands.ctrlKey = true
+    else if (item === 'shift') commands.shiftKey = true
+    else commands.key = item // Store regular keys but add something so we know it uses modifyers
+  })
+  // reformat storage name
+  return getCommandString(commands)
+}
+
 // bindEvents
-const bindEvents = (): void => {
+export const bindEvents = (): void => {
   // Key down event listener
   document.onkeydown = (event: KeyboardEvent) => {
     const hotkey = storage[
@@ -90,7 +104,7 @@ let initialized = false
 let lastKey: LastKey = null
 
 // Set one hotkey
-const hotkey: HotkeyAsignment = (command, callback) => {
+const hotkey: HotkeyAsignment = (command, alternateUp) => {
   // Initialize only once
   if (!initialized) {
     bindEvents()
@@ -98,17 +112,7 @@ const hotkey: HotkeyAsignment = (command, callback) => {
   }
   // Command is combined: ctlr+z
   if (command.length > 1 && command.includes('+')) {
-    // Collect Modifiers
-    const commands: Commands = {}
-    command.split('+').forEach(item => {
-      if (item === 'alt') commands.altKey = true
-      else if (item === 'ctrl') commands.ctrlKey = true
-      else if (item === 'control') commands.ctrlKey = true
-      else if (item === 'shift') commands.shiftKey = true
-      else commands.key = item // Store regular keys but add something so we know it uses modifyers
-    })
-    // reformat storage name
-    lastKey = getCommandString(commands)
+    lastKey = formatCommandString(command)
 
   // Command is single modifier: shift, ctrl, space enter, backspace, ect
   // Or its a single letter a, b, c, d
@@ -117,7 +121,7 @@ const hotkey: HotkeyAsignment = (command, callback) => {
   }
 
   // Create blank new hotkey and use callback if provided here
-  if (storage[lastKey] === undefined) storage[lastKey] = new Hotkey(callback)
+  if (storage[lastKey] === undefined) storage[lastKey] = new Hotkey(alternateUp !== undefined ? alternateUp : null)
 
   // Allow chainging methods
   return { up, down }
@@ -127,7 +131,7 @@ const hotkey: HotkeyAsignment = (command, callback) => {
 const down: Down = (callback) => {
   // Store "down" callback with last command
   if (callback !== undefined && lastKey !== null) storage[lastKey].down = callback
-  // Allow chainging methods
+  // Allow chaining methods
   return { up }
 }
 
@@ -141,7 +145,7 @@ const up: Up = (callback) => {
 
 // Expose removal function
 hotkey.remove = (command: CommandString) => {
-  if (storage[command] !== undefined) delete storage[command]
+  if (storage[formatCommandString(command)] !== undefined) delete storage[formatCommandString(command)]
 }
 
 // Expose only set with down and up methods
