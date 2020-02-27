@@ -55,6 +55,15 @@ hotkey('shift+f', () => {
 })
 ```
 
+# Development
+
+  1. clone repo
+  2. Install dependencies
+  `npm install`
+  2. eslint:
+  `npm run lint`
+  3. build lib folder with rollup with typescript overides
+  `npm run prebuild`
 
 ## Tests
 
