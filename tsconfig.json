@@ -2,6 +2,6 @@
   "extends": "tsconfigs/browser-executable", // Module to give browser dom types
   "compilerOptions": {
     "strictFunctionTypes": false,
-    "module": "commonjs"
+    "module": "commonjs" // allows us to use imports in test files. rollup.config should overried this to ESNext
   }
 }
