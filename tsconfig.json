@@ -1,0 +1,7 @@
+{
+  "extends": "tsconfigs/browser-executable", // Module to give browser dom types
+  "compilerOptions": {
+    "strictFunctionTypes": false,
+    "module": "commonjs"
+  }
+}
