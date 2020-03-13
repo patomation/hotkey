@@ -1,10 +1,10 @@
-interface HotkeyStorage { [key: string]: Hotkey }
+interface HotkeyStorage { [key: string]: HotkeyInstance }
 
 export const storage: HotkeyStorage = {}
 
 type Callback = () => void
 
-export class Hotkey {
+export class HotkeyInstance {
   constructor (alternateUp?: Callback | null) {
     this.up = alternateUp !== undefined && alternateUp !== undefined ? alternateUp : null // Function
     this.down = null // Function
@@ -28,7 +28,7 @@ type Down = (arg0?: Callback) => ({
   up: Up
 })
 
-type Remove = (arg0: CommandString) => void
+type Remove = (command: CommandString) => void
 
 interface Commands {
   altKey?: boolean
@@ -36,12 +36,10 @@ interface Commands {
   shiftKey?: boolean
   key?: string
 }
-
-export interface HotkeyAsignment {
+export interface HotkeyAssignmentFunction {
   (command: CommandString, callback?: Callback): { up: Up, down: Down}
   remove: Remove
 }
-
 export const getCommandString = ({
   altKey,
   ctrlKey,
@@ -104,7 +102,7 @@ let initialized = false
 let lastKey: LastKey = null
 
 // Set one hotkey
-const hotkey: HotkeyAsignment = (command, alternateUp) => {
+const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
   // Initialize only once
   if (!initialized) {
     bindEvents()
@@ -121,7 +119,7 @@ const hotkey: HotkeyAsignment = (command, alternateUp) => {
   }
 
   // Create blank new hotkey and use callback if provided here
-  if (storage[lastKey] === undefined) storage[lastKey] = new Hotkey(alternateUp !== undefined ? alternateUp : null)
+  if (storage[lastKey] === undefined) storage[lastKey] = new HotkeyInstance(alternateUp !== undefined ? alternateUp : null)
 
   // Allow changing methods
   return { up, down }
@@ -143,10 +141,9 @@ const up: Up = (callback) => {
   return { down }
 }
 
-// Expose removal function
-hotkey.remove = (command: CommandString) => {
+// Chain removal function
+hotkey.remove = (command) => {
   if (storage[formatCommandString(command)] !== undefined) delete storage[formatCommandString(command)]
 }
 
-// Expose only set with down and up methods
 export default hotkey

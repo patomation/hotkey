@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import hotkey, { storage, Hotkey, getCommandString, formatCommandString, bindEvents } from '../src/index'
+import hotkey, { storage, HotkeyInstance, getCommandString, formatCommandString, bindEvents } from '../src/index'
 // Emulate global dom
 import 'jsdom-global/register'
 
@@ -33,13 +33,13 @@ const simulateKeyboardEvent: SimulateKeyboardEvent = (
       ctrlKey
     }
   )
-  document.dispatchEvent(keyboardEevent)
+  document.dispatchEvent(keyboardEvent)
 }
 
 describe('Hotkey class', (): void => {
   it('can be created with new without error', (): void => {
-    const hotkeyClass = new Hotkey()
-    expect(hotkeyClass instanceof Hotkey).to.equal(true)
+    const hotkeyClass = new HotkeyInstance()
+    expect(hotkeyClass instanceof HotkeyInstance).to.equal(true)
   })
 })
 
@@ -94,7 +94,7 @@ testCases.forEach(({
         upCalled = true
       })
     it('exists in storage', (): void => {
-      expect(storage[formatCommandString(command)] instanceof Hotkey).to.equal(true)
+      expect(storage[formatCommandString(command)] instanceof HotkeyInstance).to.equal(true)
     })
     it('down callback', (): void => {
       simulateKeyboardEvent('keydown', key, { ctrlKey, altKey, shiftKey })
