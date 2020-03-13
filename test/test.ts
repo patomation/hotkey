@@ -22,7 +22,7 @@ const simulateKeyboardEvent: SimulateKeyboardEvent = (
     ctrlKey = false
   } = options
 
-  const keyboardEevent = new KeyboardEvent(
+  const keyboardEvent = new KeyboardEvent(
     kind,
     {
       bubbles: true,
@@ -51,7 +51,7 @@ describe('getCommandString function', (): void => {
 })
 
 describe('bindEvents function', (): void => {
-  it('it exicutes without breaking', (): void => {
+  it('it executes without breaking', (): void => {
     bindEvents()
   })
 })
@@ -70,7 +70,7 @@ const testCases: TestCase[] = [
   { key: 'c', command: 'control+c', ctrlKey: true },
   { key: 'd', command: 'alt+d', altKey: true },
   { key: 'e', command: 'shift+e', shiftKey: true },
-  { key: ' ', command: 'space' } // spacebar
+  { key: ' ', command: 'space' } // space bar
   // TODO tab
   // TODO enter?
   // Special characters?
@@ -123,23 +123,23 @@ describe('edge cases', (): void => {
     simulateKeyboardEvent('keydown', 'q')
     simulateKeyboardEvent('keyup', 'q')
   })
-  it('desnt break when key assigned but callback undefined', (): void => {
+  it('does not break when key assigned but callback undefined', (): void => {
     hotkey('u')
     simulateKeyboardEvent('keydown', 'u')
     simulateKeyboardEvent('keyup', 'u')
   })
-  it('doesnt break when no hotkey is assigned', (): void => {
+  it('does not break when no hotkey is assigned', (): void => {
     simulateKeyboardEvent('keydown', 'o')
     simulateKeyboardEvent('keyup', 'o')
   })
-  it('wont overwrite asignment', (): void => {
+  it('wont overwrite assignment', (): void => {
     hotkey('i', () => { /* */ })
     hotkey('i', () => { /* */ })
   })
   it('wont break when callbacks are undefined', (): void => {
     hotkey('t').up(undefined).down(undefined)
   })
-  it('doesnt break when removing a hotkey that doesnt exist', (): void => {
+  it('does not break when removing a hotkey that does not exist', (): void => {
     hotkey.remove('0')
   })
 })

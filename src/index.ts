@@ -123,7 +123,7 @@ const hotkey: HotkeyAsignment = (command, alternateUp) => {
   // Create blank new hotkey and use callback if provided here
   if (storage[lastKey] === undefined) storage[lastKey] = new Hotkey(alternateUp !== undefined ? alternateUp : null)
 
-  // Allow chainging methods
+  // Allow changing methods
   return { up, down }
 }
 
@@ -139,7 +139,7 @@ const down: Down = (callback) => {
 const up: Up = (callback) => {
   // Store "up" callback with last command
   if (callback !== undefined && lastKey !== null) storage[lastKey].up = callback
-  // Allow chainging methods
+  // Allow changing methods
   return { down }
 }
 
