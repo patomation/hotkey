@@ -65,7 +65,7 @@ export const formatCommandString = (command: CommandString): CommandString => {
     else if (item === 'ctrl') commands.ctrlKey = true
     else if (item === 'control') commands.ctrlKey = true
     else if (item === 'shift') commands.shiftKey = true
-    else commands.key = item // Store regular keys but add something so we know it uses modifyers
+    else commands.key = item // Store regular keys but add something so we know it uses modifiers
   })
   // reformat storage name
   return getCommandString(commands)
