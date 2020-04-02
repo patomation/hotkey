@@ -79,6 +79,8 @@ export const bindEvents = (): void => {
       getCommandString(event)
     ]
     if (hotkey !== undefined && !hotkey.pressed) {
+      // Prevent default browser hotkeys
+      event.preventDefault()
       if (hotkey.down !== null) hotkey.down()
       hotkey.pressed = true
     }
