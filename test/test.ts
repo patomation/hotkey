@@ -1,3 +1,4 @@
+import 'mocha'
 import { expect } from 'chai'
 import hotkey, { storage, HotkeyInstance, getCommandString, formatCommandString, bindEvents } from '../src/index'
 // Emulate global dom
