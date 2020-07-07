@@ -13,6 +13,8 @@ Supports using modifier keys in any order:
 `alt+ctrl+shift+p` for example, is the same as `p+control+alt+shift`:
 
 ```javascript
+import { hotkey } from '@patomation/hotkey'
+
 hotkey('control+z', () => {
     //Do some undo action
 });
