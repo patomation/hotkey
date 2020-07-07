@@ -4,6 +4,10 @@ export const storage: HotkeyStorage = {}
 
 type Callback = () => void
 
+/**
+ * hotkey class instance
+ * @param alternateUp callback
+ */
 export class HotkeyInstance {
   constructor (alternateUp?: Callback | null) {
     this.up = alternateUp !== undefined && alternateUp !== undefined ? alternateUp : null // Function
@@ -103,7 +107,11 @@ let initialized = false
 // Save last key so we can find it for adding up and down methods
 let lastKey: LastKey = null
 
-// Set one hotkey
+/**
+ * Set one hotkey
+ * @param command string hotkey command
+ * @param alternateUp  callback
+ */
 const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
   // Initialize only once
   if (!initialized) {
@@ -127,7 +135,10 @@ const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
   return { up, down }
 }
 
-// Set callback for down
+/**
+ * Set callback for down
+ * @param callback 
+ */
 const down: Down = (callback) => {
   // Store "down" callback with last command
   if (callback !== undefined && lastKey !== null) storage[lastKey].down = callback
@@ -135,7 +146,10 @@ const down: Down = (callback) => {
   return { up }
 }
 
-// Set callback for up
+/**
+ * Set callback for up
+ * @param callback 
+ */
 const up: Up = (callback) => {
   // Store "up" callback with last command
   if (callback !== undefined && lastKey !== null) storage[lastKey].up = callback
