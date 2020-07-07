@@ -137,7 +137,7 @@ const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
 
 /**
  * Set callback for down
- * @param callback 
+ * @param callback () => void
  */
 const down: Down = (callback) => {
   // Store "down" callback with last command
@@ -148,7 +148,7 @@ const down: Down = (callback) => {
 
 /**
  * Set callback for up
- * @param callback 
+ * @param callback () => void
  */
 const up: Up = (callback) => {
   // Store "up" callback with last command
