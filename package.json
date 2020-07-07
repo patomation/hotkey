@@ -1,9 +1,9 @@
 {
   "name": "@patomation/hotkey",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Set hotkeys for web apps",
   "public": true,
-  "main": "lib/index.esm.js",
+  "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "types": "lib/index.d.ts",
   "files": [

@@ -112,7 +112,7 @@ let lastKey: LastKey = null
  * @param command string hotkey command
  * @param alternateUp  callback
  */
-const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
+export const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
   // Initialize only once
   if (!initialized) {
     bindEvents()
@@ -161,5 +161,3 @@ const up: Up = (callback) => {
 hotkey.remove = (command) => {
   if (storage[formatCommandString(command)] !== undefined) delete storage[formatCommandString(command)]
 }
-
-export default hotkey

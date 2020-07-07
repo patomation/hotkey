@@ -7,6 +7,10 @@ export default {
   input: input,
   output: [
     {
+      file: pkg.main,
+      format: 'cjs'
+    },
+    {
       file: pkg.module,
       format: 'esm'
     }
