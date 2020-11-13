@@ -64,7 +64,7 @@ hotkey('shift+f', () => {
   `npm install`
   2. eslint:
   `npm run lint`
-  3. build lib folder with rollup with typescript overides
+  3. build lib folder with rollup with typescript overrides
   `npm run prebuild`
 
 ## View The files that will be published 

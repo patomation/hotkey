@@ -49,7 +49,7 @@ export const getCommandString = ({
   ctrlKey,
   shiftKey,
   key
-}: Commands): CommandString => {
+}: Commands | KeyboardEvent): CommandString => {
   let string = ''
   if (altKey !== undefined && altKey && key !== 'alt') string += 'alt+'
   if (ctrlKey !== undefined && ctrlKey && key !== 'control') string += 'ctrl+'
@@ -78,7 +78,7 @@ export const formatCommandString = (command: CommandString): CommandString => {
 // bindEvents
 export const bindEvents = (): void => {
   // Key down event listener
-  document.onkeydown = (event: KeyboardEvent) => {
+  document.addEventListener('keydown', (event: KeyboardEvent) => {
     const hotkey = storage[
       getCommandString(event)
     ]
@@ -88,17 +88,17 @@ export const bindEvents = (): void => {
       if (hotkey.down !== null) hotkey.down()
       hotkey.pressed = true
     }
-  }
+  })
 
   // Key up event listener
-  document.onkeyup = (event) => {
+  document.addEventListener('keyup', (event: KeyboardEvent) => {
     const hotkey = storage[getCommandString(event)]
 
     if (hotkey !== undefined) {
       if (hotkey.up !== null) hotkey.up()
       hotkey.pressed = false
     }
-  }
+  })
 }
 
 // Initialization boolean for doing things only once
