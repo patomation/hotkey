@@ -1,4 +1,4 @@
-interface HotkeyStorage { [key: string]: HotkeyInstance }
+type HotkeyStorage = Record<string, HotkeyInstance>
 
 export const storage: HotkeyStorage = {}
 
@@ -9,8 +9,11 @@ type Callback = () => void
  * @param alternateUp callback
  */
 export class HotkeyInstance {
-  constructor (alternateUp?: Callback | null) {
-    this.up = alternateUp !== undefined && alternateUp !== undefined ? alternateUp : null // Function
+  constructor(alternateUp?: Callback | null) {
+    this.up =
+      alternateUp !== undefined && alternateUp !== undefined
+        ? alternateUp
+        : null // Function
     this.down = null // Function
     this.pressed = false // Boolean - only let us press once
   }
@@ -24,13 +27,13 @@ type CommandString = string
 
 type LastKey = CommandString | null
 
-type Up = (arg0?: Callback) => ({
+type Up = (arg0?: Callback) => {
   down: Down
-})
+}
 
-type Down = (arg0?: Callback) => ({
+type Down = (arg0?: Callback) => {
   up: Up
-})
+}
 
 type Remove = (command: CommandString) => void
 
@@ -41,14 +44,14 @@ interface Commands {
   key?: string
 }
 export interface HotkeyAssignmentFunction {
-  (command: CommandString, callback?: Callback): { up: Up, down: Down}
+  (command: CommandString, callback?: Callback): { up: Up; down: Down }
   remove: Remove
 }
 export const getCommandString = ({
   altKey,
   ctrlKey,
   shiftKey,
-  key
+  key,
 }: Commands | KeyboardEvent): CommandString => {
   let string = ''
   if (altKey !== undefined && altKey && key !== 'alt') string += 'alt+'
@@ -64,7 +67,7 @@ export const getCommandString = ({
 export const formatCommandString = (command: CommandString): CommandString => {
   // Collect Modifiers
   const commands: Commands = {}
-  command.split('+').forEach(item => {
+  command.split('+').forEach((item) => {
     if (item === 'alt') commands.altKey = true
     else if (item === 'ctrl') commands.ctrlKey = true
     else if (item === 'control') commands.ctrlKey = true
@@ -79,9 +82,7 @@ export const formatCommandString = (command: CommandString): CommandString => {
 export const bindEvents = (): void => {
   // Key down event listener
   document.addEventListener('keydown', (event: KeyboardEvent) => {
-    const hotkey = storage[
-      getCommandString(event)
-    ]
+    const hotkey = storage[getCommandString(event)]
     if (hotkey !== undefined && !hotkey.pressed) {
       // Prevent default browser hotkeys
       event.preventDefault()
@@ -122,14 +123,18 @@ export const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
   if (command.length > 1 && command.includes('+')) {
     lastKey = formatCommandString(command)
 
-  // Command is single modifier: shift, ctrl, space enter, backspace, ect
-  // Or its a single letter a, b, c, d
+    // Command is single modifier: shift, ctrl, space enter, backspace, ect
+    // Or its a single letter a, b, c, d
   } else {
     lastKey = command
   }
 
   // Create blank new hotkey and use callback if provided here
-  if (storage[lastKey] === undefined) storage[lastKey] = new HotkeyInstance(alternateUp !== undefined ? alternateUp : null)
+  if (storage[lastKey] === undefined) {
+    storage[lastKey] = new HotkeyInstance(
+      alternateUp !== undefined ? alternateUp : null
+    )
+  }
 
   // Allow changing methods
   return { up, down }
@@ -141,7 +146,9 @@ export const hotkey: HotkeyAssignmentFunction = (command, alternateUp) => {
  */
 const down: Down = (callback) => {
   // Store "down" callback with last command
-  if (callback !== undefined && lastKey !== null) storage[lastKey].down = callback
+  if (callback !== undefined && lastKey !== null) {
+    storage[lastKey].down = callback
+  }
   // Allow chaining methods
   return { up }
 }
@@ -159,5 +166,7 @@ const up: Up = (callback) => {
 
 // Chain removal function
 hotkey.remove = (command) => {
-  if (storage[formatCommandString(command)] !== undefined) delete storage[formatCommandString(command)]
+  if (storage[formatCommandString(command)] !== undefined) {
+    delete storage[formatCommandString(command)]
+  }
 }

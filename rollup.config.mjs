@@ -1,19 +1,22 @@
+//@ts-check
 import typescript from 'rollup-plugin-typescript2'
-import pkg from './package.json'
+import fs from 'fs'
 
 const input = 'src/index.ts'
+
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
 
 export default {
   input: input,
   output: [
     {
       file: pkg.main,
-      format: 'cjs'
+      format: 'cjs',
     },
     {
       file: pkg.module,
-      format: 'esm'
-    }
+      format: 'esm',
+    },
   ],
   plugins: [
     typescript({
@@ -22,11 +25,11 @@ export default {
         compilerOptions: {
           module: 'ESNext',
           declaration: true,
-          sourceMap: true
+          sourceMap: true,
         },
-        files: [input]
+        files: [input],
       },
-      useTsconfigDeclarationDir: false
-    })
-  ]
+      useTsconfigDeclarationDir: false,
+    }),
+  ],
 }
