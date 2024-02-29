@@ -53,15 +53,51 @@ export const getCommandString = ({
   shiftKey,
   key,
 }: Commands | KeyboardEvent): CommandString => {
-  let string = ''
-  if (altKey !== undefined && altKey && key !== 'alt') string += 'alt+'
-  if (ctrlKey !== undefined && ctrlKey && key !== 'control') string += 'ctrl+'
-  if (shiftKey !== undefined && shiftKey && key !== 'shift') string += 'shift+'
-  if (key !== undefined) key = key.toLowerCase() // Force lowercase
-  // Handle space and regular keys
-  if (key !== undefined) string += key === ' ' ? 'space' : key
+  let value = ''
+  const characterMap: Record<string, string> = {
+    '~': '`',
+    '!': '1',
+    '@': '2',
+    '#': '3',
+    $: '4',
+    '%': '5',
+    '^': '6',
+    '&': '7',
+    '*': '8',
+    '(': '9',
+    ')': '0',
+    _: '-',
+    '+': '=',
+    '{': '[',
+    '}': ']',
+    '|': '\\',
+    ':': ';',
+    '<': ',',
+    '>': '.',
+    '?': '/',
+  }
+  if (key !== undefined) {
+    const keyInCharacterMap = characterMap[key]
+    if (keyInCharacterMap !== undefined) {
+      key = keyInCharacterMap
+    }
+  }
+  if (altKey !== undefined && altKey && key !== 'alt') {
+    value += 'alt+'
+  }
+  if (ctrlKey !== undefined && ctrlKey && key !== 'control') {
+    value += 'ctrl+'
+  }
+  if (shiftKey !== undefined && shiftKey && key !== 'shift') {
+    value += 'shift+'
+  }
+  if (key !== undefined) key = key?.toLowerCase() // Force lowercase
+  // Handle space and regular keysg
+  if (key !== undefined) {
+    value += key === ' ' ? 'space' : key
+  }
 
-  return string
+  return value
 }
 
 export const formatCommandString = (command: CommandString): CommandString => {
@@ -69,10 +105,13 @@ export const formatCommandString = (command: CommandString): CommandString => {
   const commands: Commands = {}
   command.split('+').forEach((item) => {
     if (item === 'alt') commands.altKey = true
-    else if (item === 'ctrl') commands.ctrlKey = true
-    else if (item === 'control') commands.ctrlKey = true
-    else if (item === 'shift') commands.shiftKey = true
-    else commands.key = item // Store regular keys but add something so we know it uses modifiers
+    else if (item === 'ctrl') {
+      commands.ctrlKey = true
+    } else if (item === 'control') {
+      commands.ctrlKey = true
+    } else if (item === 'shift') {
+      commands.shiftKey = true
+    } else commands.key = item // Store regular keys but add something so we know it uses modifiers
   })
   // reformat storage name
   return getCommandString(commands)
@@ -82,7 +121,8 @@ export const formatCommandString = (command: CommandString): CommandString => {
 export const bindEvents = (): void => {
   // Key down event listener
   document.addEventListener('keydown', (event: KeyboardEvent) => {
-    const hotkey = storage[getCommandString(event)]
+    const commandString = getCommandString(event)
+    const hotkey = storage[commandString]
     if (hotkey !== undefined && !hotkey.pressed) {
       // Prevent default browser hotkeys
       event.preventDefault()
@@ -159,7 +199,9 @@ const down: Down = (callback) => {
  */
 const up: Up = (callback) => {
   // Store "up" callback with last command
-  if (callback !== undefined && lastKey !== null) storage[lastKey].up = callback
+  if (callback !== undefined && lastKey !== null) {
+    storage[lastKey].up = callback
+  }
   // Allow changing methods
   return { down }
 }
