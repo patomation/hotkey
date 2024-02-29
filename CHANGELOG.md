@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/patomation/hotkey/compare/v1.9.0...v1.10.0) (2024-02-29)
+
+### Features
+
+- added support for number row + shift ([cbd24d1](https://github.com/patomation/hotkey/commit/cbd24d1c252ab8eadef94876bc1b228aa4aa60d5))
+
 ## [1.9.0](https://github.com/patomation/hotkey/compare/v1.8.0...v1.9.0) (2023-10-01)
 
 ### Features
