@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/patomation/hotkey/compare/v1.10.0...v1.12.0) (2024-09-15)
+
+### Features
+
+- removed prevent default and pass event object into callback ([a626c0a](https://github.com/patomation/hotkey/commit/a626c0af316b1620b715cd2a12822efbdeab5b4c))
+
 ## [1.10.0](https://github.com/patomation/hotkey/compare/v1.9.0...v1.10.0) (2024-02-29)
 
 ### Features
