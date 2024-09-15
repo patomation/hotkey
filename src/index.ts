@@ -2,7 +2,7 @@ type HotkeyStorage = Record<string, HotkeyInstance>
 
 export const storage: HotkeyStorage = {}
 
-type Callback = () => void
+type Callback = (event: KeyboardEvent) => void
 
 /**
  * hotkey class instance
@@ -124,9 +124,7 @@ export const bindEvents = (): void => {
     const commandString = getCommandString(event)
     const hotkey = storage[commandString]
     if (hotkey !== undefined && !hotkey.pressed) {
-      // Prevent default browser hotkeys
-      event.preventDefault()
-      if (hotkey.down !== null) hotkey.down()
+      if (hotkey.down !== null) hotkey.down(event)
       hotkey.pressed = true
     }
   })
@@ -136,7 +134,7 @@ export const bindEvents = (): void => {
     const hotkey = storage[getCommandString(event)]
 
     if (hotkey !== undefined) {
-      if (hotkey.up !== null) hotkey.up()
+      if (hotkey.up !== null) hotkey.up(event)
       hotkey.pressed = false
     }
   })
