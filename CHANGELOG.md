@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.1](https://github.com/patomation/hotkey/compare/v1.12.0...v1.12.1) (2024-09-16)
+
 ## [1.12.0](https://github.com/patomation/hotkey/compare/v1.10.0...v1.12.0) (2024-09-15)
 
 ### Features
